@@ -1,0 +1,14 @@
+.DS_Store
+.idea
+.vs
+.vscode
+dist
+node_modules
+coverage
+package-lock.json
+version.json
+yarn.lock
+gData.json
+docs
+*.log
+*.swp
