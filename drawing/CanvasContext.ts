@@ -2,7 +2,7 @@
  * canvas 2d context 代理类
  * canvas 本身没有做代理，是因为目前没有考虑不同屏幕设备像素比的兼容问题。
  */
-import { Matrix } from '../utility/Matrix';
+import { Matrix } from './Matrix';
 import { Point } from './GraphLib/Point';
 
 export class CanvasContext {

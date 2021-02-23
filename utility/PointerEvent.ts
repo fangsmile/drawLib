@@ -1,6 +1,5 @@
 import { HashTable, HashValue, List } from './DataStructure';
 import { EventUtil } from "./util";
-import { XlMath } from '../drawing/GraphLib/XlMath';
 
 // require("./../../shared/hand.js")
 
@@ -334,8 +333,8 @@ export class PointerEventWrapper {
                 })
                 this.secondX = second.pageX;
                 this.secondY = second.pageY;
-                let degree = XlMath.angleFromNorth_ClockWise(second.pageX, second.pageY, first.pageX, first.pageY) * 180 / Math.PI;
-                var curDis = XlMath.distance({ x: first.pageX, y: first.pageY }, { x: second.pageX, y: second.pageY });//两手指间距
+                let degree = this.angleFromNorth_ClockWise(second.pageX, second.pageY, first.pageX, first.pageY) * 180 / Math.PI;
+                var curDis = this.distance({ x: first.pageX, y: first.pageY }, { x: second.pageX, y: second.pageY });//两手指间距
                 this.lastDegree == null && (this.lastDegree = degree);//初始设置
                 this.lastPinchDis == null && (this.lastPinchDis = curDis);//初始设置
                 this.startPinchDis == null && (this.startPinchDis = curDis);//初始设置
@@ -343,7 +342,24 @@ export class PointerEventWrapper {
 
         }
     }
+    //根据某点直角坐标（x，y）计算该点与原点连线跟y轴夹角
+    angleFromNorth_ClockWise(fOriginX_Vec: number, fOriginY_Vec: number,
+        fEndX_Vec: number, fEndY_Vec: number) {
+        var fEndX = fEndX_Vec - fOriginX_Vec;
+        var fEndY = fEndY_Vec - fOriginY_Vec;
+        var fLen = Math.sqrt(fEndX * fEndX + fEndY * fEndY);
+        var fAngle = Math.acos(fEndY / fLen);
 
+        if (fEndX < 0) {
+            fAngle = 2 * Math.PI - fAngle;
+        }
+
+        return fAngle;
+    }
+    
+    distance(b:any, e:any) {
+        return Math.sqrt(Math.pow(e.x - b.x, 2) + Math.pow(e.y - b.y, 2));
+    }
     private getPointerEventInfo(): PointerEventInfo {
 
         return new PointerEventInfo(this.down, this.target, this.dragging, this.lastX,
@@ -404,7 +420,7 @@ export class PointerEventWrapper {
                 this.setXY(this.downEvents.get(this.pointerId));//设置鼠标坐标位置  这里只针对主控手指
             // else
             //     return;
-            let dis = XlMath.distance({ x: this.pageX, y: this.pageY }, { x: this.startX, y: this.startY });
+            let dis = this.distance({ x: this.pageX, y: this.pageY }, { x: this.startX, y: this.startY });
 
             if (this.downEvents.size <= 1 || this.initState.one) {//一指
                 this.setXY(e);
@@ -452,7 +468,7 @@ export class PointerEventWrapper {
                 let nowDate = e.timeStamp;
                 let time = (nowDate - this.swipeInfo.prevDate) / 1000;
                 if (time > 0.06) {
-                    let newDistance = XlMath.distance({ x: this.pageX, y: this.pageY }, { x: this.swipeInfo.prevX, y: this.swipeInfo.prevY });
+                    let newDistance = this.distance({ x: this.pageX, y: this.pageY }, { x: this.swipeInfo.prevX, y: this.swipeInfo.prevY });
                     let newVelocity = newDistance / time;//以秒为单位
                     this.swipeInfo.acce = (newVelocity - this.swipeInfo.prevVelocity) / time;//以秒为单位
                     this.swipeInfo.prevVelocity = newVelocity;
@@ -491,9 +507,9 @@ export class PointerEventWrapper {
                             second = value;
                     })
                     //计算两手指移动是否为旋转
-                    let degree = XlMath.angleFromNorth_ClockWise(second.pageX, second.pageY, first.pageX, first.pageY) * 180 / Math.PI;
-                    var curPinchDis = XlMath.distance({ x: first.pageX, y: first.pageY }, { x: second.pageX, y: second.pageY });//两手指间距
-                    let secondFingerDragDis = XlMath.distance({ x: second.pageX, y: second.pageY }, { x: this.secondX, y: this.secondY });
+                    let degree = this.angleFromNorth_ClockWise(second.pageX, second.pageY, first.pageX, first.pageY) * 180 / Math.PI;
+                    var curPinchDis = this.distance({ x: first.pageX, y: first.pageY }, { x: second.pageX, y: second.pageY });//两手指间距
+                    let secondFingerDragDis = this.distance({ x: second.pageX, y: second.pageY }, { x: this.secondX, y: this.secondY });
 
                     if (!this.dragging && (curPinchDis - this.startPinchDis > 3 || dis > 3 || secondFingerDragDis > 3) && this.down) {
                         // this.moreMoveState = true; //多指是否执行拖拽
@@ -635,7 +651,7 @@ export class PointerEventWrapper {
             let disX = this.pageX - this.startX;
             let disY = this.pageY - this.startY;
             let dir = this._getDirection(disX, disY);
-            let dis = XlMath.distance({ x: this.pageX, y: this.pageY }, { x: this.startX, y: this.startY });
+            let dis = this.distance({ x: this.pageX, y: this.pageY }, { x: this.startX, y: this.startY });
             this.direction = dir;
             if (dis > 60) {
                 this.dispatchEvent(PointerEventType.threeDragMoveEnd, e.button);
@@ -648,7 +664,7 @@ export class PointerEventWrapper {
         }
         if (e.pointerId == this.pointerId && this.initState.one) {
             if (this.dragging) {
-                let dis = XlMath.distance({ x: this.lastX, y: this.lastY }, { x: this.startX, y: this.startY });
+                let dis = this.distance({ x: this.lastX, y: this.lastY }, { x: this.startX, y: this.startY });
                 if (this.swipeInfo.acce > 30000 && dis > 100&&e.type!='pointercancel') {//pointercancel的时候不响应swipe
                     let disX = this.pageX - this.startX;
                     let disY = this.pageY - this.startY;
