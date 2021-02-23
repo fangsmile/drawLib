@@ -1,0 +1,31 @@
+
+  {
+    "compilerOptions": {
+      "target": "esnext",
+      "module": "esnext",
+      "lib": [
+        "es2017",
+        "dom"] ,
+      "allowJs": false,
+      "strict": false,
+      "declaration": true ,
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true,
+      "noUnusedLocals": false,
+      "experimentalDecorators": true,
+      "noUnusedParameters": false,
+      "removeComments": false,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "skipLibCheck": true,
+      // "outFile": "./out/index.js", /* outFile用于指定将输出文件合并为一个文件，它的值为一个文件路径名。比如设置为"./dist/main.js"，则输出的文件为一个main.js文件。但是要注意，只有设置module的值为amd和system模块时才支持这个配置 */
+      // "baseUrl": ".",
+      "outDir":"./dist/types",
+      "rootDir": "."
+    },
+    "typeRoots": [
+      "@types",
+      "node_modules/@types"
+    ],
+    "exclude": ["build", "dist", "out", "*.config.js"]
+  }

@@ -1,0 +1,29 @@
+{
+  "name": "drawing-build",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc && node scripts/createIndex.js && webpack",
+    "prepublish": "webpack",
+    "tscw": "tsc --watch",
+    "createIndex": "node scripts/createIndex.js"
+  },
+  "keywords": [
+    "drawing-build"
+  ],
+  "author": "lff",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.17",
+    "babel-loader": "^8.2.2",
+    "terser-webpack-plugin": "^3.0.1",
+    "ts-loader": "^8.0.17",
+    "typescript": "^4.1.5",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
+  }
+}
