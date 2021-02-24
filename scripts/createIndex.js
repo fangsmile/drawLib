@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-22 14:11:54
- * @LastEditTime: 2021-02-23 10:44:43
+ * @LastEditTime: 2021-02-23 16:51:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \drawing-webpack\scripts\createIndex.js
@@ -10,27 +10,29 @@ let  fs = require('fs');
 let path = require('path')
 let  join = require('path').join;
 
-let pathReseach=path.resolve(__dirname, "../drawing");
-function createIndex(){
-    let fileNames=findSync(pathReseach);
-    let importFiles='';
-    let pathReseachReg=pathReseach.replace(/\\/g,'\\/');
-    fileNames.forEach((val,index)=>{
-        val=val.replace(/\\/g,'/');
-        val=val.replace(eval("/"+pathReseachReg+"/g"),".");
-        val=val.replace(".ts","");
-        importFiles+=`import * as any${index} from "${val}";\n export {any${index}}\n`;
-    })
-    console.log(importFiles)
-    //生成文件
-    WriteFile(path.resolve(__dirname, "../drawing/index.ts"), importFiles)
-    .then(res => {
-        console.log('已经生成', 'green');
-    })
-    .catch(err => {
-        console.log(err);
-    });
 
+function createIndex(paths){
+    paths.forEach((pathDir,index)=>{
+        let fullPath=path.resolve(__dirname, `../${pathDir}`);
+        let fileNames=findSync(fullPath);
+        let importFiles='';
+        let pathReseachReg=fullPath.replace(/\\/g,'\\/');
+        fileNames.forEach((val,index)=>{
+            val=val.replace(/\\/g,'/');
+            val=val.replace(eval("/"+pathReseachReg+"/g"),".");
+            val=val.replace(".ts","");
+            importFiles+=`import * as any${index} from "${val}";\n export {any${index}}\n`;
+        })
+        console.log(importFiles)
+        //生成文件
+        WriteFile(path.resolve(__dirname, `../${pathDir}/index.ts`), importFiles)
+        .then(res => {
+            console.log('已经生成', 'green');
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    })
 }
 
 function findSync(startPath) {
@@ -69,7 +71,7 @@ function WriteFile(filename, data, options) {
   });
 }
 
-createIndex()
+createIndex(['drawing','utility','text-editor'])
 
 module.exports={
     createIndex

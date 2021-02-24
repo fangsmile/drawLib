@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc && node scripts/createIndex.js && webpack",
+    "build": "webpack",//"tsc && node scripts/createIndex.js && webpack",
     "prepublish": "webpack",
     "tscw": "tsc --watch",
     "createIndex": "node scripts/createIndex.js"

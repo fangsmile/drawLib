@@ -1,11 +1,11 @@
-
-  {
+{
     "compilerOptions": {
       "target": "esnext",
       "module": "esnext",
       "lib": [
         "es2017",
-        "dom"] ,
+        "dom"
+      ],
       "allowJs": false,
       "strict": false,
       "declaration": true ,
